@@ -24,14 +24,6 @@ import AppTrackingTransparency
 import UserNotifications
 #endif
 
-#if canImport(CoreBluetooth)
-import CoreBluetooth
-#endif
-
-#if canImport(HealthKit)
-import HealthKit
-#endif
-
 public final class AppPermissions {
     // MARK: - Camera Permission
     public static func requestCameraAccess(permissionCallback: @escaping ((Bool) -> Void)) {
@@ -188,23 +180,6 @@ public final class AppPermissions {
         #endif
     }
 
-    // MARK: - Bluetooth Permission
-    public static func requestBluetoothAccess(permissionCallback: @escaping ((Bool) -> Void)) {
-        #if canImport(CoreBluetooth)
-        let manager = CBCentralManager()
-        switch manager.authorization {
-        case .allowedAlways:
-            DispatchQueue.main.async {
-                permissionCallback(true)
-            }
-        default:
-            permissionCallback(false)
-        }
-        #else
-        permissionCallback(false)
-        #endif
-    }
-
     // MARK: - Microphone Permission
     public static func requestMicrophoneAccess(permissionCallback: @escaping ((Bool) -> Void)) {
         #if canImport(AVFoundation)
@@ -226,29 +201,5 @@ public final class AppPermissions {
         #else
         permissionCallback(false)
         #endif
-    }
-
-    // MARK: - HealthKit Permission
-    public static func requestHealthKitAccess(permissionCallback: @escaping ((Bool) -> Void)) {
-        if #available(macOS 13.0, *) {
-#if canImport(HealthKit)
-            if HKHealthStore.isHealthDataAvailable() {
-                let healthStore = HKHealthStore()
-                let readTypes = Set([HKObjectType.quantityType(forIdentifier: .heartRate)!])
-                
-                healthStore.requestAuthorization(toShare: nil, read: readTypes) { success, _ in
-                    DispatchQueue.main.async {
-                        permissionCallback(success)
-                    }
-                }
-            } else {
-                permissionCallback(false)
-            }
-#else
-            permissionCallback(false)
-#endif
-        } else {
-            // Fallback on earlier versions
-        }
     }
 }
