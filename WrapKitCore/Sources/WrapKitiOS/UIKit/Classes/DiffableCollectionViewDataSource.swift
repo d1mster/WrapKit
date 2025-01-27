@@ -51,19 +51,19 @@ public class DiffableCollectionViewDataSource<Model: Hashable>: UICollectionView
         collectionView.delegate = self
     }
     
-    public func updateItems(_ items: [Model], at section: Int = 0) {
+    public func updateItems(_ items: [Model], at section: Int = 0, animated: Bool) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let uniqueItems = items.uniqued
             DispatchQueue.main.async { [weak self] in
                 var snapshot = NSDiffableDataSourceSnapshot<Int, CollectionItem<Model>>()
                 snapshot.appendSections([section])
                 snapshot.appendItems(uniqueItems.map { .model($0) }, toSection: section)
-                self?.apply(snapshot, animatingDifferences: true)
+                self?.apply(snapshot, animatingDifferences: animated)
             }
         }
     }
     
-    public func updateItems(_ items: [[Model]]) {
+    public func updateItems(_ items: [[Model]], animated: Bool) {
         DispatchQueue.global(qos: .userInitiated).async {
             let uniqueItems = items.uniqued
             DispatchQueue.main.async { [weak self] in
@@ -72,7 +72,7 @@ public class DiffableCollectionViewDataSource<Model: Hashable>: UICollectionView
                 uniqueItems.enumerated().forEach {
                     snapshot.appendItems($0.element.uniqued.map { .model($0) }, toSection: $0.offset)
                 }
-                self?.apply(snapshot, animatingDifferences: true)
+                self?.apply(snapshot, animatingDifferences: animated)
             }
         }
     }
