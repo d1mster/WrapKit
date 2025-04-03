@@ -376,6 +376,7 @@ open class Textfield: UITextField {
 
 public extension Textfield {
     func updateAppearance(isValid: Bool) {
+        if self.isValidState == isValid { return }
         self.isValidState = isValid
         font = appearance.font
         let isFirstResponder = isFirstResponder
