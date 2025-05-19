@@ -85,12 +85,13 @@ extension SelectionContentView {
         tableViewConstraints = tableView.anchor(
             .top(searchBar.bottomAnchor, constant: 16),
             .leading(leadingAnchor, constant: 12),
-            .trailing(trailingAnchor, constant: 12)
+            .trailing(trailingAnchor, constant: 12),
+            .bottom(stackView.bottomAnchor, constant: 12)
         )
-        spacerView.anchor(
-            .top(tableView.bottomAnchor),
-            .bottom(bottomAnchor)
-        )
+//        spacerView.anchor(
+//            .top(tableView.bottomAnchor),
+//            .bottom(bottomAnchor)
+//        )
     }
 }
 
